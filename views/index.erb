@@ -2,23 +2,21 @@
 <html>
   <head>
     <title>Behold: The Internet!</title>
+    <link type="text/css" rel="stylesheet" href="/stylesheets/app.css">
   </head>
   <body>
     <h1>Best Todo Manager Ever</h1>
 
-    <form method="post" class="js-form">
-      <aside class="js-notifications">
-      </aside>
-      <p>
-        <label for="todo-input">I need to...</label>
-        <input type="text" name="todo" id="todo-input"/>
-      </p>
-      <p>
-        <input type="submit" value="Submit"/>
-      </p>
-    </form>
+    <section class="todo-form-box">
+      <aside class="notifications js-notifications"></aside>
+      <h3>I need to...</h3>
+      <form method="post" class="js-form">
+        <input type="text" name="todo" id="todo-input" placeholder="Present awesome things!"/>
+        <input type="submit" id="todo-submit" value="Submit"/>
+      </form>
+    </section>
 
-    <section class="todos">
+    <section class="todos js-todos">
       <h2>Todos</h2>
       <% todos.each do |todo| %>
         <article class="todo" data-id="<%= todo.id %>">

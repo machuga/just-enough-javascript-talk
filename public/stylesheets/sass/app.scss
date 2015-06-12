@@ -1,0 +1,66 @@
+@import 'bourbon/bourbon';
+@import 'neat/neat';
+
+body {
+  font-family: Arial,sans-serif;
+  font-size: 16px;
+  @include outer-container;
+}
+
+.todo-form-box{
+  margin: 0 auto;
+  h3 {
+    text-align: center;
+  }
+
+  #todo-input {
+    width: 100%;
+    line-height: 2em;
+    font-size: 16px;
+    padding: 10px;
+  }
+
+  #todo-submit {
+    display: none;
+  }
+}
+
+.todo {
+  @include outer-container;
+  padding-top: 5px;
+  padding-bottom: 5px;
+
+  button {
+    @include span-columns(1);
+    background-color: #990012;
+    border: 0;
+    color: white;
+
+    &:hover {
+      background-color: darken(#990012, 10%);
+    }
+  }
+
+  span {
+    @include span-columns(11);
+    display: block;
+  }
+}
+
+.todos {
+  @include span-columns(6);
+  @include omega;
+}
+
+.notifications {
+  .notification, p {
+    color: white;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #4AA02C;
+  }
+
+  .alert {
+    background-color: #990012;
+  }
+}

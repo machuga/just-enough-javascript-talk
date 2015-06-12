@@ -2,6 +2,11 @@ require 'sinatra'
 require 'sinatra/json'
 require 'sinatra/reloader'
 
+require 'sass/plugin/rack'
+
+Sass::Plugin.options[:style] = :compressed
+use Sass::Plugin::Rack
+
 require './todo_list'
 
 list = TodoList.new
