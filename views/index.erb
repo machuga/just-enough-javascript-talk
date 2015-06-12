@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Behold: The Internet!</title>
+  </head>
+  <body>
+    <h1>Best Todo Manager Ever</h1>
+
+    <form method="post" class="js-form">
+      <aside class="js-notifications">
+      </aside>
+      <p>
+        <label for="todo-input">I need to...</label>
+        <input type="text" name="todo" id="todo-input"/>
+      </p>
+      <p>
+        <input type="submit" value="Submit"/>
+      </p>
+    </form>
+
+    <section class="todos">
+      <h2>Todos</h2>
+      <% todos.each do |todo| %>
+        <article class="todo" data-id="<%= todo.id %>">
+          <button type="button" class="js-destroy">&times;</button>
+          <span><%= todo.task %></span>
+        </article>
+      <% end %>
+    </section>
+
+    <script type="text/javascript" src="/scripts/jquery.min.js"></script>
+    <script type="text/javascript" src="/scripts/app.js"></script>
+  </body>
+</html>
