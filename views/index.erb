@@ -26,7 +26,23 @@
       <% end %>
     </section>
 
+    <script type="text/x-handlebars-template" id="todo-tpl">
+      <article class="todo" data-id="{{ id }}">
+        <button type="button" class="js-destroy">&times;</button>
+        <span>{{ task }}</span>
+      </article>
+    </script>
+
+    <script type="text/x-handlebars-template" id="notice-add-tpl">
+      <p data-id="{{ id }}">Successfully added todo: "{{ task }}"</p>
+    </script>
+
+    <script type="text/x-handlebars-template" id="notice-rem-tpl">
+      <p data-id="{{ id }}">Successfully removed todo: "{{ task }}"</p>
+    </script>
+
     <script type="text/javascript" src="/scripts/jquery.min.js"></script>
+    <script type="text/javascript" src="/scripts/handlebars.js"></script>
     <script type="text/javascript" src="/scripts/app.js"></script>
   </body>
 </html>

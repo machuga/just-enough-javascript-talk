@@ -3,6 +3,9 @@ $(function() {
   var $todos         = $('.js-todos');
   var $form          = $('.js-form');
   var $input         = $('#todo-input');
+  var todoTpl        = Handlebars.compile($('#todo-tpl').html());
+  var noticeAddTpl   = Handlebars.compile($('#notice-add-tpl').html());
+  var noticeRemTpl   = Handlebars.compile($('#notice-rem-tpl').html());
 
   $input.focus();
 
@@ -15,12 +18,8 @@ $(function() {
       data: { task: $input.val() },
       dataType: 'json',
       success: function(data) {
-        $todos.append('<article class="todo" data-id="'+data.id+'">' +
-                           '<button type="button" class="js-destroy">&times;</button> ' +
-                           '<span>'+data.task+'</span></article>');
-        $notifications.append('<p data-id="'+data.id+'">' +
-                                      'Successfully added todo: "'+data.task +
-                                      '"</p>');
+        $todos.append(todoTpl(data));
+        $notifications.append(noticeAddTpl(data));
 
         setTimeout(function() {
           $notifications.find('p[data-id="'+data.id+'"]').remove();
@@ -41,10 +40,11 @@ $(function() {
       url: '/todos/'+id,
       type: 'delete',
       success: function() {
-        $notifications.append('<p data-id="' + id +
-                                      '">Successfully removed todo: "' +
-                                      $todo.find('span').html() +
-                                      '"</p>');
+        $notifications.append(noticeRemTpl({
+          id: id,
+          task: $todo.find('span').html()
+        }));
+
         $todo.fadeToggle(function() {
           $(this).remove();
         });
