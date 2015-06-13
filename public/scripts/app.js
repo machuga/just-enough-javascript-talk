@@ -27,12 +27,32 @@ var Notifications = (function(Handlebars) {
   return Notifications;
 }(window.Handlebars));
 
+var TodoList = (function(Handlebars) {
+  function TodoList($el, templateContent) {
+    this.$el = $el;
+    this.template = Handlebars.compile(templateContent);
+  }
+
+  TodoList.prototype.add = function(todo) {
+    this.$el.append(this.template(todo));
+  };
+
+  TodoList.prototype.remove = function(id) {
+    var $todo = this.$el.find('.todo[data-id="'+id+'"]');
+
+    $todo.fadeToggle(function() {
+      $todo.remove();
+    });
+  };
+
+  return TodoList;
+}(window.Handlebars));
+
 $(function() {
   var notifications  = new Notifications($('.js-notifications'), $('#notification-tpl').html());
-  var $todos         = $('.js-todos');
+  var todos          = new TodoList($('.js-todos'), $('#todo-tpl').html());
   var $form          = $('.js-form');
   var $input         = $('#todo-input');
-  var todoTpl        = Handlebars.compile($('#todo-tpl').html());
 
   $input.focus();
 
@@ -45,7 +65,7 @@ $(function() {
       data: { task: $input.val() },
       dataType: 'json',
       success: function(data) {
-        $todos.append(todoTpl(data));
+        todos.add(data);
         notifications.add('Successfully added todo: "'+data.task+'"');
 
         $form[0].reset();
@@ -54,7 +74,7 @@ $(function() {
     });
   });
 
-  $todos.on('click', '.js-destroy', function(e) {
+  todos.$el.on('click', '.js-destroy', function(e) {
     e.preventDefault();
     var $todo = $(e.target).closest('.todo');
     var id = $todo.data('id');
@@ -64,10 +84,7 @@ $(function() {
       type: 'delete',
       success: function() {
         notifications.add('Successfully removed todo: "'+$todo.find('span').html()+'"');
-
-        $todo.fadeToggle(function() {
-          $(this).remove();
-        });
+        todos.remove(id);
 
         $input.focus();
       }
