@@ -1,11 +1,38 @@
+var Notifications = (function(Handlebars) {
+  var DEFAULT_TIMEOUT = 3000;
+  var notificationId  = 0;
+
+  function Notifications($el, templateContent) {
+    this.$el = $el;
+    this.template = Handlebars.compile(templateContent);
+  }
+
+  Notifications.prototype.add = function(notice) {
+    var id = generateId();
+    this.$el.append(this.template({ id: id, notice: notice }));
+
+    setTimeout(function() { this.remove(id); }.bind(this), DEFAULT_TIMEOUT);
+
+    return id;
+  };
+
+  Notifications.prototype.remove = function(id) {
+    this.$el.find('[data-id="'+id+'"]').remove();
+  };
+
+  function generateId() {
+    return notificationId += 1;
+  }
+
+  return Notifications;
+}(window.Handlebars));
+
 $(function() {
-  var $notifications = $('.js-notifications');
+  var notifications  = new Notifications($('.js-notifications'), $('#notification-tpl').html());
   var $todos         = $('.js-todos');
   var $form          = $('.js-form');
   var $input         = $('#todo-input');
   var todoTpl        = Handlebars.compile($('#todo-tpl').html());
-  var noticeAddTpl   = Handlebars.compile($('#notice-add-tpl').html());
-  var noticeRemTpl   = Handlebars.compile($('#notice-rem-tpl').html());
 
   $input.focus();
 
@@ -19,11 +46,7 @@ $(function() {
       dataType: 'json',
       success: function(data) {
         $todos.append(todoTpl(data));
-        $notifications.append(noticeAddTpl(data));
-
-        setTimeout(function() {
-          $notifications.find('p[data-id="'+data.id+'"]').remove();
-        }, 3000);
+        notifications.add('Successfully added todo: "'+data.task+'"');
 
         $form[0].reset();
         $input.focus();
@@ -40,18 +63,11 @@ $(function() {
       url: '/todos/'+id,
       type: 'delete',
       success: function() {
-        $notifications.append(noticeRemTpl({
-          id: id,
-          task: $todo.find('span').html()
-        }));
+        notifications.add('Successfully removed todo: "'+$todo.find('span').html()+'"');
 
         $todo.fadeToggle(function() {
           $(this).remove();
         });
-
-        setTimeout(function() {
-          $notifications.find('p[data-id="'+id+'"]').remove();
-        }, 3000);
 
         $input.focus();
       }
