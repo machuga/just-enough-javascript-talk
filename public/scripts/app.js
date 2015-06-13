@@ -1,54 +1,59 @@
 $(function() {
-  $('#todo-input').focus();
+  var $notifications = $('.js-notifications');
+  var $todos         = $('.js-todos');
+  var $form          = $('.js-form');
+  var $input         = $('#todo-input');
 
-  $('.js-form').on('submit', function(e) {
+  $input.focus();
+
+  $form.on('submit', function(e) {
     e.preventDefault();
 
     $.ajax({
       url: '/todos',
       type: 'post',
-      data: { task: $('.js-form #todo-input').val() },
+      data: { task: $input.val() },
       dataType: 'json',
       success: function(data) {
-        $('.js-todos').append('<article class="todo" data-id="'+data.id+'">' +
+        $todos.append('<article class="todo" data-id="'+data.id+'">' +
                            '<button type="button" class="js-destroy">&times;</button> ' +
                            '<span>'+data.task+'</span></article>');
-        $('.js-notifications').append('<p data-id="'+data.id+'">' +
+        $notifications.append('<p data-id="'+data.id+'">' +
                                       'Successfully added todo: "'+data.task +
                                       '"</p>');
 
         setTimeout(function() {
-          $('.js-notifications').find('p[data-id="'+data.id+'"]').remove();
+          $notifications.find('p[data-id="'+data.id+'"]').remove();
         }, 3000);
 
-        $('.js-form')[0].reset();
-        $('#todo-input').focus();
+        $form[0].reset();
+        $input.focus();
       }
     });
   });
 
-  $('.js-todos').on('click', '.js-destroy', function(e) {
+  $todos.on('click', '.js-destroy', function(e) {
     e.preventDefault();
+    var $todo = $(e.target).closest('.todo');
+    var id = $todo.data('id');
 
     $.ajax({
-      url: '/todos/'+$(this).closest('.todo').data('id'),
+      url: '/todos/'+id,
       type: 'delete',
       success: function() {
-        var id = $(e.target).closest('.todo').data('id');
-        $('.js-notifications').append('<p data-id="' +
-                                      $(e.target).closest('.todo').data('id') +
+        $notifications.append('<p data-id="' + id +
                                       '">Successfully removed todo: "' +
-                                      $(e.target).closest('.todo').find('span').html() +
+                                      $todo.find('span').html() +
                                       '"</p>');
-        $(e.target).closest('.todo').fadeToggle(function() {
+        $todo.fadeToggle(function() {
           $(this).remove();
         });
 
         setTimeout(function() {
-          $('.js-notifications').find('p[data-id="'+id+'"]').remove();
+          $notifications.find('p[data-id="'+id+'"]').remove();
         }, 3000);
 
-        $('#todo-input').focus();
+        $input.focus();
       }
     });
   });
